@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.carbon.identity.sample.extension.authenticators.internal;
 
 import org.apache.commons.logging.Log;
@@ -25,11 +24,12 @@ import org.wso2.carbon.identity.application.authentication.framework.Application
 import org.wso2.carbon.identity.sample.extension.authenticators.SampleAuthenticator;
 
 /**
+ * This class is used to register the service.
  * @scr.component name="identity.sample.auth.extension.component" immediate="true"
  */
-public class ServicExtensionComponent {
+public class ServiceExtensionComponent {
 
-    private static Log log = LogFactory.getLog(ServicExtensionComponent.class);
+    private static Log log = LogFactory.getLog(ServiceExtensionComponent.class);
 
     /**
      * @param ctxt
@@ -44,10 +44,10 @@ public class ServicExtensionComponent {
             ctxt.getBundleContext()
                     .registerService(ApplicationAuthenticator.class.getName(), sampleAuthenticator, null);
             if (log.isDebugEnabled()) {
-                log.info("BasicCustomAuthenticator bundle is activated");
+                log.info("Custom Authenticator bundle is activated");
             }
         } catch (Throwable e) {
-            log.error("BasicCustomAuthenticator bundle activation Failed", e);
+            log.error("Custom Authenticator bundle activation Failed", e);
         }
 
     }
@@ -55,7 +55,7 @@ public class ServicExtensionComponent {
     protected void deactivate(ComponentContext ctxt) {
 
         if (log.isDebugEnabled()) {
-            log.info("BasicCustomAuthenticator bundle is deactivated");
+            log.info("Custom Authenticator bundle is deactivated");
         }
     }
 

@@ -29,9 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Sample class for testing abstractAuthenticator
  */
-public class SampleAuthenticator extends AbstractAuthenticator {
+public class SampleAuthenticator extends CustomAuthenticator {
 
-    private static final String HWK_APP_URL = "HwkAppUrl";
+    private static final String TEST_APP_URL = "TestAppUrl";
 
     private static final Log log = LogFactory.getLog(SampleAuthenticator.class);
 
@@ -42,7 +42,7 @@ public class SampleAuthenticator extends AbstractAuthenticator {
 
     @Override
     protected String getPageUrlProperty() {
-        return HWK_APP_URL;
+        return TEST_APP_URL;
     }
 
     @Override
@@ -53,12 +53,12 @@ public class SampleAuthenticator extends AbstractAuthenticator {
 
     @Override
     public String getName() {
-        return "SampleAuthenticator";
+        return "Sample Authenticator";
     }
 
     @Override
     public String getFriendlyName() {
-        return "Sample HardwareKey Authenticator";
+        return "Sample Authenticator";
     }
     @Override
     public String getClaimDialectURI() {
@@ -69,10 +69,10 @@ public class SampleAuthenticator extends AbstractAuthenticator {
     public List<Property> getConfigurationProperties() {
         List<Property> configProperties = new ArrayList<>();
         Property appUrl = new Property();
-        appUrl.setName(HWK_APP_URL);
-        appUrl.setDisplayName("Hardware Key Sample URL");
+        appUrl.setName(TEST_APP_URL);
+        appUrl.setDisplayName(" Test Sample URL");
         appUrl.setRequired(true);
-        appUrl.setDescription("Enter sample HWK url value.");
+        appUrl.setDescription("Enter sample Test url value.");
         appUrl.setDisplayOrder(0);
         configProperties.add(appUrl);
         return configProperties;

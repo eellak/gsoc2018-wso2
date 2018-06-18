@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.carbon.identity.sample.extension.authenticators;
 
 import org.apache.commons.logging.Log;
@@ -40,9 +39,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Abstract Sample Authenticator.
  */
-public abstract class AbstractAuthenticator implements FederatedApplicationAuthenticator {
+public abstract class CustomAuthenticator implements FederatedApplicationAuthenticator {
 
-    private static final Log log = LogFactory.getLog(AbstractAuthenticator.class);
+    private static final Log log = LogFactory.getLog(CustomAuthenticator.class);
 
     /**
      * Returns the page URL.
