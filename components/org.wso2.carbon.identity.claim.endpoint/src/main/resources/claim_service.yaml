@@ -1,0 +1,85 @@
+swagger: '2.0'
+info:
+  title: Sample claim Endpoint
+  version: '1.0.0 It is written with [swagger 2](http://swagger.io/).'
+
+schemes:
+  - https
+host: localhost
+basePath: /api/identity/oauth2/resourcev1.0
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /Claim/{claimId}:
+
+    # Endpoint uses to get resource by resource ID
+
+    get:
+      summary: Obtain claim description by ID
+      description: >-
+        This method uses to obtain resource information when resource ID is
+        given
+      operationId: getClaim
+      parameters:
+        - $ref: '#/parameters/claimId'
+      responses:
+        '200':
+          description: 'successful operation. Return Id,name,scopes,icon_uri and type'
+          schema:
+            $ref: '#/definitions/readResource'
+        '400':
+          description: Invalid ID supplied
+          schema:
+            $ref: '#/definitions/error'
+        '404':
+          description: Not Found.Resource does not exist.
+          schema:
+            $ref: '#/definitions/error'
+definitions:
+  readResource:
+    properties:
+      ClaimId:
+        type: string
+        description: ' Returning resource Id after successfull registration.'
+        example: 0f77c1f2-64c3-452d-b622-4519b6906949
+      name:
+        type: string
+        description: ' Returning name after successfull registration.'
+        example: Resource Descripton-1
+      scope:
+        type: string
+        description: ' Returning resource scopes after successfull registration.'
+        example: 'View,Edit,Delete'
+      type:
+        type: string
+        description: ' Returning type after successfull registration.'
+        example: 'http://www.example.com/rs/photoalbum'
+      icon_uri:
+        type: string
+        description: ' Returning icon_uri after successfull registration.'
+        example: 'http://www.example.com/icons/sharesocial.png'
+      description:
+        type: string
+        description: ' Returning description after successfull registration.'
+  #-----------------------------------------------------
+  # The Error Response object
+  #-----------------------------------------------------
+  error:
+    type: object
+    properties:
+      error:
+        type: string
+      error_description:
+        type: string
+  #-----------------------------------------------------
+  # The parameters
+  #-----------------------------------------------------
+parameters:
+  claimId:
+    name: claimId
+    in: path
+    description: ID ofthe  claim
+    required: true
+    type: string
