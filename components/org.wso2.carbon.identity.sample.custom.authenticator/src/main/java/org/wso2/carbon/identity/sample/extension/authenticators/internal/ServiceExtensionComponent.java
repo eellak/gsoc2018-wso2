@@ -22,14 +22,30 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.sample.extension.authenticators.SampleAuthenticator;
+import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  * This class is used to register the service.
- * @scr.component name="identity.sample.auth.extension.component" immediate="true"
+ * @scr.component name="identity.sample.authenticator.component" immediate="true"
+ * @scr.reference name="realm.service"
+ * interface="org.wso2.carbon.user.core.service.RealmService"cardinality="1..1"
+ * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
+ *
  */
 public class ServiceExtensionComponent {
 
     private static Log log = LogFactory.getLog(ServiceExtensionComponent.class);
+
+    private static RealmService realmService;
+
+    public static RealmService getRealmService() {
+        return realmService;
+    }
+
+    protected void setRealmService(RealmService realmService) {
+        log.debug("Setting the Realm Service");
+        ServiceExtensionComponent.realmService = realmService;
+    }
 
     /**
      * @param ctxt
@@ -58,5 +74,11 @@ public class ServiceExtensionComponent {
             log.info("Custom Authenticator bundle is deactivated");
         }
     }
+
+    protected void unsetRealmService(RealmService realmService) {
+        log.debug("UnSetting the Realm Service");
+        ServiceExtensionComponent.realmService = null;
+    }
+
 
 }

@@ -21,17 +21,24 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.application.authentication.framework.AuthenticatorFlowStatus;
 import org.wso2.carbon.identity.application.authentication.framework.FederatedApplicationAuthenticator;
+import org.wso2.carbon.identity.application.authentication.framework.config.model.StepConfig;
 import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
 import org.wso2.carbon.identity.application.authentication.framework.exception.AuthenticationFailedException;
 import org.wso2.carbon.identity.application.authentication.framework.exception.LogoutFailedException;
 import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
 import org.wso2.carbon.identity.application.authentication.framework.util.FrameworkConstants;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
+import org.wso2.carbon.identity.sample.extension.authenticators.internal.ServiceExtensionComponent;
+import org.wso2.carbon.user.api.UserRealm;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.UserStoreManager;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,16 +57,12 @@ public abstract class CustomAuthenticator implements FederatedApplicationAuthent
      */
     protected abstract String getPageUrlProperty();
 
+
     @Override
     public AuthenticatorFlowStatus process(HttpServletRequest request, HttpServletResponse response,
-                                           AuthenticationContext context) throws AuthenticationFailedException,
-            LogoutFailedException {
+                                           AuthenticationContext context) throws AuthenticationFailedException, LogoutFailedException {
 
         log.info("Sample Authenticator: \"" + getFriendlyName() + "\" called");
-        /*for (Map.Entry<org.wso2.carbon.identity.application.common.model.ClaimMapping, String> entry :
-                context.getSequenceConfig().getAuthenticatedUser().getUserAttributes().entrySet()) {
-            log.info("claim uri: " + entry.getKey() + ", claim value: " + entry.getValue());
-        }*/
         log.info(context.getCurrentAuthenticatedIdPs());
         String authenticatorName = request.getParameter("authenticatorName");
         if (context.isLogoutRequest()) {
@@ -69,18 +72,20 @@ public abstract class CustomAuthenticator implements FederatedApplicationAuthent
         } else {
             return initializeAuthentication(request, response, context);
         }
-
     }
 
     private AuthenticatorFlowStatus processAuthenticationResponse(HttpServletRequest request,
                                                                   HttpServletResponse response,
                                                                   AuthenticationContext context) {
 
-        AuthenticatedUser lastUser = context.getSubject();
+        Map.Entry<Integer, StepConfig> entry = context.getSequenceConfig().getStepMap().entrySet().iterator().next();
+
+       // String authenticatedUser = entry.getValue().getAuthenticatedUser()
+
         String successParam = request.getParameter("success");
         boolean isSuccess = Boolean.parseBoolean(successParam);
         if (isSuccess) {
-            String subject = lastUser.getAuthenticatedSubjectIdentifier();
+            String subject = entry.getValue().getAuthenticatedUser().getAuthenticatedSubjectIdentifier();
             AuthenticatedUser authenticatedUser = AuthenticatedUser
                     .createFederateAuthenticatedUserFromSubjectIdentifier(subject);
             context.setSubject(authenticatedUser);
@@ -92,18 +97,32 @@ public abstract class CustomAuthenticator implements FederatedApplicationAuthent
     }
 
     private AuthenticatorFlowStatus initializeAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                                             AuthenticationContext context)
-            throws AuthenticationFailedException {
-
+                                                             AuthenticationContext context) throws AuthenticationFailedException {
         Map<String, String> authenticatorProperties = context.getAuthenticatorProperties();
-        String pageUrl = authenticatorProperties.get(getPageUrlProperty());
+        String pageUrl = authenticatorProperties.get(getPageUrlProperty()); //Get web app end point from the UI
+
+        //Map.Entry<String, String> entry1 = authenticatorProperties.entrySet().iterator().next();
+        String claimUri = authenticatorProperties.get("ClaimProperty");
+        UserStoreManager userStoreManager = null;
+        Map.Entry<Integer, StepConfig> entry = context.getSequenceConfig().getStepMap().entrySet().iterator().next();
+        String authenticatedUser = entry.getValue().getAuthenticatedUser().getAuthenticatedSubjectIdentifier();
         try {
-            String callbackUrl = IdentityUtil.getServerURL(FrameworkConstants.COMMONAUTH,
-                    true, true);
+            int tenantId = IdentityTenantUtil.getTenantIdOfUser(authenticatedUser);
+            UserRealm userRealm = ServiceExtensionComponent.getRealmService().getTenantUserRealm(tenantId);
+            if (userRealm != null) {
+                userStoreManager = (UserStoreManager) userRealm.getUserStoreManager();
+            }
+            String value = userStoreManager.getUserClaimValue(authenticatedUser, claimUri, null);
+            log.info("claim value : " + value);
+        } catch (UserStoreException e) {
+            log.debug("Error occured file retrieving claim attribute from user store.");
+        }
+        try {
+            String callbackUrl = IdentityUtil.getServerURL(FrameworkConstants.COMMONAUTH, true, true);
             callbackUrl = callbackUrl + "?sessionDataKey=" + context.getContextIdentifier() + "&authenticatorName="
                     + getName();
             String encodedUrl = URLEncoder.encode(callbackUrl, StandardCharsets.UTF_8.name());
-
+//Web app request with callbackurl. From web app, get the callbackurl and location rediction to call back external claims
             response.sendRedirect(pageUrl + "?callbackUrl=" + encodedUrl);
             return AuthenticatorFlowStatus.INCOMPLETE;
         } catch (UnsupportedEncodingException e) {

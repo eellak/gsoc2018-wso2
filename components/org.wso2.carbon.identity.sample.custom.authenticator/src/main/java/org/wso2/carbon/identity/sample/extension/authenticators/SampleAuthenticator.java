@@ -31,50 +31,62 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class SampleAuthenticator extends CustomAuthenticator {
 
-    private static final String TEST_APP_URL = "TestAppUrl";
+        private static final long serialVersionUID = 6439291340285653402L;
+        private static final String HWK_APP_URL = "HwkAppUrl";
+        private static final String CLAIM_URI = "ClaimProperty";
 
-    private static final Log log = LogFactory.getLog(SampleAuthenticator.class);
+        private static final Log log = LogFactory.getLog(SampleAuthenticator.class);
 
-    @Override
-    public boolean canHandle(HttpServletRequest request) {
-        return true;
-    }
+        @Override
+        public boolean canHandle(HttpServletRequest request) {
+            return true;
+        }
 
-    @Override
-    protected String getPageUrlProperty() {
-        return TEST_APP_URL;
-    }
+        @Override
+        protected String getPageUrlProperty() {
+            return HWK_APP_URL;
+        }
 
-    @Override
-    public String getContextIdentifier(HttpServletRequest request) {
-        String identifier = request.getParameter("sessionDataKey");
-        return identifier;
-    }
+        @Override
+        public String getContextIdentifier(HttpServletRequest request) {
+            String identifier = request.getParameter("sessionDataKey");
+            return identifier;
+        }
 
-    @Override
-    public String getName() {
-        return "Sample Authenticator";
-    }
+        @Override
+        public String getName() {
+            return "SampleAuthenticator";
+        }
 
-    @Override
-    public String getFriendlyName() {
-        return "Sample Authenticator";
-    }
-    @Override
-    public String getClaimDialectURI() {
-        return null;
-    }
+        @Override
+        public String getFriendlyName() {
+            return "Sample Authenticator";
+        }
 
-    @Override
-    public List<Property> getConfigurationProperties() {
-        List<Property> configProperties = new ArrayList<>();
-        Property appUrl = new Property();
-        appUrl.setName(TEST_APP_URL);
-        appUrl.setDisplayName(" Test Sample URL");
-        appUrl.setRequired(true);
-        appUrl.setDescription("Enter sample Test url value.");
-        appUrl.setDisplayOrder(0);
-        configProperties.add(appUrl);
-        return configProperties;
+        @Override
+        public String getClaimDialectURI() {
+            return null;
+        }
+
+        @Override
+        public List<Property> getConfigurationProperties() {
+            List<Property> configProperties = new ArrayList<>();
+
+            Property appUrl = new Property();
+            appUrl.setName(HWK_APP_URL);
+            appUrl.setDisplayName("Sample URL");
+            appUrl.setRequired(true);
+            appUrl.setDescription("Enter sample url value.");
+            appUrl.setDisplayOrder(0);
+            configProperties.add(appUrl);
+
+            Property appurl1 = new Property();
+            appurl1.setName(CLAIM_URI);
+            appurl1.setDisplayName("Claim uri");
+            appurl1.setDescription("Enter claim uri");
+            appurl1.setDisplayOrder(1);
+            configProperties.add(appurl1);
+            //add another property for app endoint
+            return configProperties;
+        }
     }
-}
