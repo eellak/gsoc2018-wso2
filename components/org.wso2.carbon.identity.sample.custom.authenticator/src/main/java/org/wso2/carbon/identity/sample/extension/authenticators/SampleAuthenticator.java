@@ -34,6 +34,8 @@ public class SampleAuthenticator extends CustomAuthenticator {
         private static final long serialVersionUID = 6439291340285653402L;
         private static final String HWK_APP_URL = "HwkAppUrl";
         private static final String CLAIM_URI = "ClaimProperty";
+        private static final String USER_NAME = "UserName";
+        private static final String PASSWORD = "Password";
 
         private static final Log log = LogFactory.getLog(SampleAuthenticator.class);
 
@@ -86,6 +88,20 @@ public class SampleAuthenticator extends CustomAuthenticator {
             appurl1.setDescription("Enter claim uri");
             appurl1.setDisplayOrder(1);
             configProperties.add(appurl1);
+
+            Property appurl2 = new Property();
+            appurl2.setName(USER_NAME);
+            appurl2.setDisplayName("User name");
+            appurl2.setDescription("Enter User name");
+            appurl2.setDisplayOrder(1);
+            configProperties.add(appurl2);
+
+            Property appurl3 = new Property();
+            appurl3.setName(PASSWORD);
+            appurl3.setDisplayName("Password");
+            appurl3.setDescription("Enter Password");
+            appurl3.setDisplayOrder(1);
+            configProperties.add(appurl3);
             //add another property for app endoint
             return configProperties;
         }

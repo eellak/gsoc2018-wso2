@@ -56,6 +56,16 @@
             <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
             <version>5.8.146</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -90,6 +100,8 @@
                             org.wso2.carbon.core.util;version="${carbon.kernel.imp.pkg.version.range}",
                             org.wso2.carbon.identity.application.authentication.framework.*;version="${carbon.identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.application.common.model;version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.apache.http.client.*; version="${httpclient.version}",
+                            org.apache.commons.codec.binary.*,
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.identity.sample.extension.authenticators.internal,

@@ -32,6 +32,7 @@
  import org.wso2.carbon.identity.application.common.model.ClaimConfig;
  import org.wso2.carbon.identity.application.common.model.ClaimMapping;
  import org.wso2.carbon.identity.application.common.model.IdentityProvider;
+ import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
  import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
  import org.wso2.carbon.identity.core.util.IdentityUtil;
  import org.wso2.carbon.identity.sample.extension.authenticators.internal.ServiceExtensionComponent;
@@ -39,13 +40,16 @@
  import org.wso2.carbon.user.api.UserStoreException;
  import org.wso2.carbon.user.core.UserStoreManager;
 
+ import java.io.BufferedReader;
  import java.io.IOException;
+ import java.io.InputStreamReader;
  import java.io.UnsupportedEncodingException;
+ import java.net.URL;
+ import java.net.URLConnection;
  import java.net.URLEncoder;
+ import java.nio.charset.Charset;
  import java.nio.charset.StandardCharsets;
- import java.util.HashMap;
- import java.util.Iterator;
- import java.util.Map;
+ import java.util.*;
  import javax.servlet.http.HttpServletRequest;
  import javax.servlet.http.HttpServletResponse;
 
@@ -133,12 +137,22 @@
              log.debug("Error occured file retrieving claim attribute from user store.");
          }
          try {
+             String userName = authenticatorProperties.get("UserName");
+             String passWord = authenticatorProperties.get("Password");
+
              String callbackUrl = IdentityUtil.getServerURL(FrameworkConstants.COMMONAUTH, true, true);
              callbackUrl = callbackUrl + "?sessionDataKey=" + context.getContextIdentifier() + "&authenticatorName="
                      + getName() + "&externalId=" + value;
              String encodedUrl = URLEncoder.encode(callbackUrl, StandardCharsets.UTF_8.name());
 //Web app request with callbackurl. From web app, get the callbackurl and location rediction to call back external claims
-             response.sendRedirect(pageUrl + "?callbackUrl=" + encodedUrl);
+             String userCredentials = userName + ":" + passWord;
+
+             String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes()));
+            Map.Entry<String, String> authHeader = new AbstractMap.SimpleEntry<String, String>("Authorization", basicAuth);
+            // sendRequest(pageUrl + "?callbackUrl=" + encodedUrl, authHeader);
+
+
+            // response.sendRedirect(pageUrl + "?callbackUrl=" + encodedUrl);
              return AuthenticatorFlowStatus.INCOMPLETE;
          } catch (UnsupportedEncodingException e) {
              throw new AuthenticationFailedException("Unsupported encoding exception occurred." + e.getMessage());
@@ -176,8 +190,8 @@
 
      private void buildClaims(AuthenticationContext context, Map<String, String> userInfo, ClaimConfig claimConfig){
          Map<ClaimMapping, String> claims = new HashMap<>();
-
-         for(ClaimMapping claimMapping : claimConfig.getClaimMappings()){
+//jsonobj key:value Ex:- city:colombo, ...
+        /* for(ClaimMapping claimMapping : claimConfig.getClaimMappings()){
              String claimValue = userInfo.get(claimMapping.getRemoteClaim().getClaimUri());
 
              ClaimMapping mapping = new ClaimMapping();
@@ -187,9 +201,52 @@
              claimMapping.setLocalClaim(claim);
 
              claims.put(mapping, claimValue);
-         }
+         }*/
+         for(Map.Entry<String, String> externalClaim : userInfo.entrySet()){
+             ClaimMapping mapping = new ClaimMapping();
+             Claim claim = new Claim();
+             claim.setClaimUri(externalClaim.getKey());
+             mapping.setRemoteClaim(claim);
+             mapping.setLocalClaim(claim);
 
+             claims.put(mapping, externalClaim.getValue());
+         }
          context.getSubject().setUserAttributes(claims);
      }
+   //  String authString = username + ":" + password;
 
+     private String sendRequest(String url, Map.Entry<String, String> authHeader) throws IOException {
+
+         BufferedReader in = null;
+         StringBuilder b = new StringBuilder();
+
+         try {
+             URLConnection urlConnection = new URL(url).openConnection();
+
+             if(authHeader != null){
+                 urlConnection.setRequestProperty(authHeader.getKey(), authHeader.getValue());
+
+             }
+
+             in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.forName("utf-8")));
+
+
+
+
+
+
+
+
+             String inputLine = in.readLine();
+             while (inputLine != null) {
+                 b.append(inputLine).append("\n");
+                 inputLine = in.readLine();
+             }
+         } finally {
+             IdentityIOStreamUtils.closeReader(in);
+         }
+
+         return b.toString();
+
+     }
  }

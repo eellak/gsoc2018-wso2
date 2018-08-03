@@ -120,6 +120,18 @@
                 <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -352,5 +364,7 @@
         <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
         <javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
         <axiom-api.version>1.2.11-wso2v10</axiom-api.version>
+        <httpclient.version>4.3.3</httpclient.version>
+        <commons.httpclient.version>3.1</commons.httpclient.version>
     </properties>
 </project>
