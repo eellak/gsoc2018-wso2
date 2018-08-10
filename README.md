@@ -10,25 +10,30 @@ WSO2 Identity and Access Management Server is open source popular identity and a
 
 This scenario in WSO2IS which is required to first user needs to authenticate with primary usestore and get authenticated user's attributes. From user attributes list, need to get a specific attribute which is pre-configured by the end user and then call an web app to obtain external claims. Thereafter, this external claim's values should be used in the response object to send to the client application.
 
-**Link to the gist**
+**Final report**
 ---
 - Link : [https://gist.github.com/isuri97/1dcdce22deebaa7f6b9d057bf7075902](https://gist.github.com/isuri97/1dcdce22deebaa7f6b9d057bf7075902)
 
-**Link to the code**
+**Work Done**
 ---
-- Link :  [https://github.com/eellak/gsoc2018-wso2](https://github.com/eellak/gsoc2018-wso2)
+- Implementation of custom authenticator : [custom federated authenticator](https://github.com/eellak/gsoc2018-wso2/tree/master/components/org.wso2.carbon.identity.sample.custom.authenticator)
+
+- Implementation of web service : [sample web service](https://github.com/eellak/gsoc2018-wso2/tree/master/components/sample_web_application)
+
 
 **Special Links**
 ---
  Links :
 
-* Link to the timeline : [https://docs.google.com/spreadsheets/d/1oHRgznE82yOQ7dBfqKD3IIba4ZlfTBd8lKsjUgp_fRU/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1oHRgznE82yOQ7dBfqKD3IIba4ZlfTBd8lKsjUgp_fRU/edit?usp=sharing)
+* Link to the timeline : [Timeline](https://docs.google.com/spreadsheets/d/1oHRgznE82yOQ7dBfqKD3IIba4ZlfTBd8lKsjUgp_fRU/edit?usp=sharing)
 
-* Link to the project page : [https://summerofcode.withgoogle.com/projects/#5787476321370112](https://summerofcode.withgoogle.com/projects/#5787476321370112)
+* Link to the project page : [GSOC Project](https://summerofcode.withgoogle.com/projects/#5787476321370112)
 
-* Link to installation guide : [https://github.com/eellak/gsoc2018-wso2/wiki/Installation-Guide](https://github.com/eellak/gsoc2018-wso2/wiki/Installation-Guide)
+* Link to installation guide : [Installation guide](https://github.com/eellak/gsoc2018-wso2/wiki/Installation-Guide)
 
-* Link to developer guide : [https://github.com/eellak/gsoc2018-wso2/wiki/Developer-Guide](https://github.com/eellak/gsoc2018-wso2/wiki/Developer-Guide)
+* Link to developer guide : [Developer guide](https://github.com/eellak/gsoc2018-wso2/wiki/Developer-Guide)
+
+* Link to github : [Isuri Anuradha](https://github.com)
 
 **Mentor**
 ---
