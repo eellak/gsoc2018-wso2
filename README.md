@@ -19,7 +19,7 @@ Organization : [GFOSS - Open Technologies Alliance](https://gfoss.eu)
 **Final report**
 ---
 
-- Link : [https://gist.github.com/isuri97/1dcdce22deebaa7f6b9d057bf7075902](https://gist.github.com/isuri97/1dcdce22deebaa7f6b9d057bf7075902)
+- Link : [Final Documentation](https://gist.github.com/isuri97/1dcdce22deebaa7f6b9d057bf7075902)
 
 **Work Done**
 ---
