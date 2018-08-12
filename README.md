@@ -12,7 +12,7 @@ This scenario in WSO2IS which is required to first user needs to authenticate wi
 **Google summer of codes**
 ---
 
-Google Summer of Code participant: Isuri Anuradha ([isu97](https://github.com)
+Google Summer of Code participant: Isuri Anuradha ([isu97])(https://github.com)
 
 Organization : [GFOSS - Open Technologies Alliance](https://gfoss.eu)
 
@@ -28,6 +28,9 @@ Organization : [GFOSS - Open Technologies Alliance](https://gfoss.eu)
 
 - Implementation of web service : [sample web service](https://github.com/eellak/gsoc2018-wso2/tree/master/components/sample_web_application)
 
+**Demostration**
+---
+- Demo : Find from [here](https://youtu.be/lJvUkSkwW_Y)
 
 **Special Links**
 ---
